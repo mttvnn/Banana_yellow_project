@@ -1,19 +1,19 @@
 clc; clear; close all;
 
-%defining variables
-subjPrint_co = 1; %is the subject we want to see graph
-subjPrint_fl = 1; %the subject of fallers
+%% defining variables
+subjPrint_co = 1;
+subjPrint_fl = 1;
 g = 9.81;
 fs = 100;
 f_lowpass = 5;
 f_highpass=0.2;
 
-%defining parameters for reading data
+%% defining parameters for reading data
 CO1 = 'CO0';
 tail = '.dat';
-j = [1:25,27,30:32,35:37,39:42,44]; % j for CO (only available subjects)
+j = [1:25,27,30:32,35:37,39:42,44]; % j for CO (only readable subjects)
 FL1 = 'FL0';
-k = [1,4:9,11,14,16,18,19:23,25:32,34:36]; % k for FL (only available subjects)
+k = [1,4:9,11,14,16,18,19:23,25:32,34:36]; % k for FL (only readable subjects)
 
 %load just the firts subject
 %j=1;
@@ -88,4 +88,5 @@ std_stride_duration_FL=std(StrideDuration_FL);
 std_activity_FL=std(Activity_FL);
 fprintf('\nFallers Step Number:%d+-%d',m_step_number_FL,std_step_number_FL);
 fprintf('\nFallers Stride Duration:%d+-%d',m_stride_duration_FL,std_stride_duration_FL);
+
 fprintf('\nFallers Activity:%d+-%d',m_activity_FL,std_activity_FL);
