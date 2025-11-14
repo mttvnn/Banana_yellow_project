@@ -2,7 +2,7 @@ clc;
 clear;
 close all;
 
-%variables
+%% Defining variables
 subjPrint_co = 11; %is the subject we want to see graph
 subjPrint_fl = 13; %the subject of fallers
 g = 9.81;
@@ -11,15 +11,15 @@ f_lowpass = 5;
 f_highpass = 0.2;
 time_analysis = 30; %time for analizing the data equal for all subject
 
-%defining parameters for reading data
-CO1 = 'long-term-movement-monitoring-database-100\LabWalks\co0';
+%% Defining parameters for reading data
+CO1= 'long-term-movement-monitoring-database-100\LabWalks\co0';
 tail = '_base.dat';
 j = [1:11,13:36,40:42];  %j for CO (only available subjects)
 FL1 = 'long-term-movement-monitoring-database-100\LabWalks\fl0';
 k = [1,3:11,13,15:28,30:39];  % k for FL (only available subjects)
 
-%reding data and run the algorithm
-%controls
+%% Reading data and run the algorithm
+% Controls
 vel_co = zeros(length(j),1);
 stepTime_co = zeros(length(j),1);
 for i = 1:length(j)
@@ -36,7 +36,8 @@ for i = 1:length(j)
     subj = rdsamp (string);
     [vel_co(i),stepTime_co(i)] = mean_LAB_velocity(subj,fs,f_lowpass,f_highpass,flagPlot,time_analysis);
 end
-%fallers
+
+% Fallers
 vel_fl = zeros(length(k),1);
 stepTime_fl = zeros(length(k),1);
 for i = 1:length(k)
@@ -54,7 +55,7 @@ for i = 1:length(k)
     [vel_fl(i),stepTime_fl(i)] = mean_LAB_velocity(subj,fs,f_lowpass,f_highpass,flagPlot,time_analysis);
 end
 
-%removing outliers for a better result
+%% Removing outliers for a better result
 vel_fl = rmoutliers(vel_fl);
 vel_co = rmoutliers(vel_co);
 
@@ -67,7 +68,7 @@ fprintf('mean velocity: %.5f\n',mean(vel_fl));
 fprintf('std velocity: %.5f\n',std(vel_fl));
 fprintf('mean Step time: %.5f \n',mean(stepTime_fl))
 
-%preparing data for boxplot
+%% Preparing data for boxplot
 stepTime = [stepTime_co; stepTime_fl];
 label = [repmat({'Control'},length(stepTime_co),1)
                 repmat({'Fallers'},length(stepTime_fl),1)];
@@ -76,7 +77,6 @@ boxplot(stepTime,label)
 grid on
 title('Step Time')
 
-%preparing data for boxplot
 velocity = [vel_co; vel_fl];
 labels = [repmat({'Control'},length(vel_co),1)
                 repmat({'Fallers'},length(vel_fl),1)];
@@ -98,3 +98,4 @@ grid on
 title('Gait velocity Faller subjects')
 xlabel('Velocity(m/s)')
 ylabel('Frequency')
+
