@@ -6,11 +6,11 @@ function [vel,stepTime] = mean_LAB_velocity(subj,fs,f_lowpass,flagPlot,time_anal
 %frequencies for LPF and HPF and the selected time interval for normalizing
 %signals. The outputs are the mean velocity and the mean step time
 
-%defining variables
+%% Defining variables
 acel = subj(:,1:3);
 gyro = subj(:,4:6);
 
-%filtering the signals
+%% Filtering the signals
 [b,a] = butter(4,f_lowpass*2/fs);
 acel = filtfilt(b,a,acel);
 gyro = filtfilt(b,a,gyro);
@@ -81,5 +81,6 @@ AAP = trapz(kAP);       %displacement
 Ls = 0.775 * AAP;       %step length (Wenxia Lu et.al) k = 0.775
 stepTime = mean(diff(locsAP/fs));
 vel = Ls / stepTime;    %velocity
+
 
 end
