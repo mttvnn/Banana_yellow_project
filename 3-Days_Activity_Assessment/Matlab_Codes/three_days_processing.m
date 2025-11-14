@@ -1,42 +1,38 @@
-function [Total_StepNumber, Average_StrideDuration,act] = three_days_processing(subj,fs,f_lowpass,f_highpass,flagPlot)
+function [Total_StepNumber, Average_StrideDuration, act] = three_days_processing(subj,fs,f_lowpass,f_highpass,flagPlot)
 
-%% defining variables
+%% Defining variables
 acel = subj(:,1:3);
 gyro = subj(:,4:6);
 
-%% filtering the signals
+%% Filtering the signals
 [b,a] = butter(4,f_lowpass*2/fs);
 acel = filtfilt(b,a,acel);
 gyro = filtfilt(b,a,gyro);
-% HPF is not needed because in MoeNillsen is removed g
 
-%% applying moe nillsen algorithm to adjust axis
+%% Applying moe nillsen algorithm to adjust axis
 [acel(:,3), acel(:,2), acel(:,1)] = algo_Moe_Nilssen(acel(:,3),acel(:,2),acel(:,1),'tilt');
 
-%% filtering the signals
+%% Filtering the signals
 [b,a] = butter(4,f_highpass*2/fs,'high');
 acel = filtfilt(b,a,acel);
 
-%defining time vector
+%% Defining time vector
 time = (1/fs:1/fs:length(acel)/fs);
 
 %% SMA filterering
 SMA_data = SMA(acel,time,fs);
 SMA_logic = SMA_data>(0.18);
 
-% figure()
-% plot(time,SMA_logic)
-
 %% Second filtering
 energy= frequencyenergy(acel,time,fs); %each value represent one second
 energy_logic = energy > 0.05;  %(weiss 2013)
 activity = energy_logic | SMA_logic;
 
-%% evaluating avarage activity
+%% Evaluating avarage activity
 global_activity = activity_detection(activity);
 act = sum(global_activity)/length(activity)*100;
 
-%% plot accelerations and ang.velocities
+%% Plot accelerations and ang.velocities
 flagPlot = 1;
 if flagPlot
     figure
@@ -66,6 +62,7 @@ end
 %% StepNumber
 AP = acel(:,3);
 
+% Finding the start and the end of the bouts
 start_activity = [];
 end_activity = [];
 
@@ -103,6 +100,7 @@ Total_StepNumber=sum(StepNumber);
 
 
 %% Stride Duration
+% Dividing each bouts into 60s window
 window_len = 60 * fs;     
 for i = 1:length(start_activity)
     s = start_activity(i);
@@ -116,12 +114,12 @@ for i = 1:length(start_activity)
 
     nwin = floor(bout_len / window_len);
 
+% Applying CWT method to each window
     for w = 1:nwin
         win_start = (w-1)*window_len + 1; 
         win_end   = w*window_len;
         win_AP = AP_w(win_start:win_end);
-
-        % CWT method
+        
         [ICpeak, ICind, FCpeak, FCind] = CWT(win_AP, fs);
 
         [ICind, FCind, Check] = check(FCind, ICind);
@@ -140,4 +138,5 @@ for i = 1:length(start_activity)
 end
 
 Average_StrideDuration = median(Window_Stride_duration);
+
 end
