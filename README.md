@@ -10,7 +10,7 @@
 * Statistics and Machine Learning Toolbox
 
 ## Executing program
-1. Open Matlab and check the working directory
+1. Open Matlab and check the working directory. After downloading the optional target folder, make sure that all the data files inside the data folder are placed in the same directory as the MATLAB scripts.This ensures that the script can find and load the necessary data without any issues or errors.
 2. Run the main script 'Classificator.m'
 
 ## Workflow Overview
